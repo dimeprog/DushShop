@@ -1,4 +1,4 @@
-import 'package:dush/widget/product_item.dart';
+import '../widget/product_item.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 

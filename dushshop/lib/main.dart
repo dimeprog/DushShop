@@ -1,4 +1,4 @@
-import 'package:dush/screens/product_overview_screen.dart';
+import './screens/product_overview_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
