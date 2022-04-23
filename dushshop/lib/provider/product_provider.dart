@@ -1,4 +1,4 @@
-import '../models/product.dart';
+import 'product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

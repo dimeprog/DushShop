@@ -1,27 +1,31 @@
+import 'package:dushshop/provider/product.dart';
 import 'package:flutter/material.dart';
 import '../screens/product_detail_screen.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final String imageUrl;
+  // final String id;
+  // final String title;
+  // final String imageUrl;
 
-  ProductItem({
-    required this.id,
-    required this.imageUrl,
-    required this.title,
-  });
+  // ProductItem({
+  //   required this.id,
+  //   required this.imageUrl,
+  //   required this.title,
+  // });
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed(ProductDetailScreen.routeName);
+          Navigator.of(context)
+              .pushNamed(ProductDetailScreen.routeName, arguments: product.id);
         },
         child: GridTile(
           child: Image.network(
-            imageUrl,
+            product.imageUrl,
             fit: BoxFit.cover,
           ),
           footer: GridTileBar(
@@ -34,7 +38,7 @@ class ProductItem extends StatelessWidget {
               ),
             ),
             title: Text(
-              title,
+              product.title,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 15,
