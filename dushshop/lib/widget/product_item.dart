@@ -2,6 +2,7 @@ import 'package:dushshop/provider/product.dart';
 import 'package:flutter/material.dart';
 import '../screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
+import '../provider/product.dart';
 
 class ProductItem extends StatelessWidget {
   // final String id;
@@ -15,7 +16,8 @@ class ProductItem extends StatelessWidget {
   // });
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
+    print('rebuild');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GestureDetector(
@@ -30,12 +32,21 @@ class ProductItem extends StatelessWidget {
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
-            leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.favorite,
-                color: Colors.deepOrange,
-              ),
+            leading: Consumer<Product>(
+              builder: ((context, value, child) => IconButton(
+                    onPressed: () {
+                      product.toggleIsFavorite();
+                    },
+                    icon: product.isFavourite
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.deepOrange,
+                          )
+                        : const Icon(
+                            Icons.favorite_border,
+                            color: Colors.deepOrange,
+                          ),
+                  )),
             ),
             title: Text(
               product.title,

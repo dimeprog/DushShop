@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_function_declarations_over_variables
+
 import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
@@ -15,4 +17,9 @@ class Product with ChangeNotifier {
     required this.title,
     this.isFavourite = false,
   });
+
+  void toggleIsFavorite() {
+    isFavourite = !isFavourite;
+    notifyListeners();
+  }
 }
