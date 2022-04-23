@@ -1,6 +1,5 @@
 import 'package:dushshop/provider/product_provider.dart';
 import 'package:dushshop/widget/product_grid.dart';
-
 import '../widget/product_item.dart';
 import 'package:flutter/material.dart';
 import '../provider/product.dart';
