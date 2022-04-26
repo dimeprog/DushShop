@@ -1,5 +1,8 @@
-import 'package:dushshop/provider/product_provider.dart';
-import 'package:dushshop/widget/product_grid.dart';
+import '../provider/cart.dart';
+import '../provider/product_provider.dart';
+import '../screens/cart_screen.dart';
+import '../widget/badge.dart';
+import '../widget/product_grid.dart';
 import '../widget/product_item.dart';
 import 'package:flutter/material.dart';
 import '../provider/product.dart';
@@ -27,37 +30,50 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ),
         actions: [
           PopupMenuButton(
-              onSelected: (FilterOption selectedValue) {
-                setState(() {
-                  if (selectedValue == FilterOption.Favorites) {
-                    _showFavoriteOnly = true;
-                  } else {
-                    _showFavoriteOnly = false;
-                  }
-                });
-              },
-              itemBuilder: (_) => [
-                    PopupMenuItem(
-                      onTap: () {},
-                      child: const Text(
-                        'Show favorite',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      value: FilterOption.Favorites,
-                    ),
-                    PopupMenuItem(
-                      child: const Text(
-                        'Show All',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () {},
-                      value: FilterOption.All,
-                    )
-                  ])
+            onSelected: (FilterOption selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOption.Favorites) {
+                  _showFavoriteOnly = true;
+                } else {
+                  _showFavoriteOnly = false;
+                }
+              });
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                onTap: () {},
+                child: const Text(
+                  'Show favorite',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                value: FilterOption.Favorites,
+              ),
+              PopupMenuItem(
+                child: const Text(
+                  'Show All',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: () {},
+                value: FilterOption.All,
+              )
+            ],
+          ),
+          Consumer<Cart>(
+            builder: (_, Cart, _2) => Badge(
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CartScreen.routeName);
+                },
+                icon: Icon(Icons.shopping_cart),
+              ),
+              value: Cart.itemCount.toString(),
+              color: Theme.of(context).accentColor,
+            ),
+          ),
         ],
       ),
       body: ProductGrid(_showFavoriteOnly),
