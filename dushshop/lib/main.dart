@@ -1,4 +1,7 @@
-import 'package:dushshop/provider/cart.dart';
+import 'package:dushshop/screens/orders_screen.dart';
+
+import './provider/cart.dart';
+import './provider/orders.dart';
 import './screens/cart_screen.dart';
 
 import './screens/product_overview_screen.dart';
@@ -6,7 +9,6 @@ import 'package:flutter/material.dart';
 import './screens/product_detail_screen.dart';
 import './provider/product_provider.dart';
 import 'package:provider/provider.dart';
-import './provider/cart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Orders(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -42,8 +47,10 @@ class MyApp extends StatelessWidget {
             )),
         home: ProductOverviewScreen(),
         routes: {
+          ProductOverviewScreen.routeName: (ctx) => ProductOverviewScreen(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
+          OrdersScreen.routeName: (ctx) => OrdersScreen(),
         },
       ),
     );
