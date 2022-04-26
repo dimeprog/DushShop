@@ -1,3 +1,4 @@
+import '../provider/cart.dart';
 import 'package:dushshop/provider/product.dart';
 import 'package:flutter/material.dart';
 import '../screens/product_detail_screen.dart';
@@ -17,6 +18,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     // print('rebuild');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -63,7 +65,9 @@ class ProductItem extends StatelessWidget {
                 Icons.shopping_cart,
                 color: Colors.deepOrange,
               ),
-              onPressed: () {},
+              onPressed: () {
+                cart.addItem(product.id, product.title, product.price);
+              },
             ),
           ),
         ),

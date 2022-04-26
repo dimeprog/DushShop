@@ -36,6 +36,35 @@ class ProductProvider with ChangeNotifier {
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+    Product(
+      id: 'p5',
+      description: 'for food and making juice',
+      imageUrl:
+          'https://cdn.pixabay.com/photo/2016/04/15/08/04/strawberry-1330459_960_720.jpg',
+      price: 15,
+      title: 'strawberry',
+    ),
+    Product(
+        id: 'p6',
+        description: 'for bathing',
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2017/07/16/22/22/bath-oil-2510783_960_720.jpg',
+        price: 100,
+        title: 'bath-oil'),
+    Product(
+        id: 'p7',
+        description: 'for moving about and traveling ',
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2017/08/24/18/25/car-2677839_960_720.jpg',
+        price: 5000,
+        title: 'car'),
+    Product(
+        id: 'p8',
+        description: 'used for lighting during photo shot by the photographier',
+        imageUrl:
+            'https://cdn.pixabay.com/photo/2021/07/14/17/23/photography-6466671_960_720.jpg',
+        price: 1000,
+        title: 'photography light')
   ];
 
   List<Product> get item {
