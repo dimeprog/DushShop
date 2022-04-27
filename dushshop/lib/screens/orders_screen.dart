@@ -1,3 +1,4 @@
+import 'package:dushshop/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import '../provider/orders.dart';
 import 'package:provider/provider.dart';
@@ -10,18 +11,24 @@ class OrdersScreen extends StatelessWidget {
     final orderData = Provider.of<Orders>(context).order;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushNamed('/'),
+        ),
         title: Text('Your Order'),
       ),
-      body: SingleChildScrollView(
-        child: Expanded(
-          child: SizedBox(
-            height: 300,
-            child: ListView.builder(
-              itemBuilder: (ctx, i) => OrderItemWidget(orderData[i]),
-              itemCount: orderData.length,
+      body: Column(
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 300,
+              child: ListView.builder(
+                itemBuilder: (ctx, i) => OrderItemWidget(orderData[i]),
+                itemCount: orderData.length,
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
