@@ -1,3 +1,4 @@
+import 'package:dushshop/provider/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/cart.dart';
@@ -5,10 +6,12 @@ import '../widget/cart_item_widget.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart_screen';
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
-    final cartItem = cart.items.values.toList();
+    final cartItemValues = cart.items.values.toList();
+    final cartItemkey = cart.items.keys.toList();
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -32,7 +35,7 @@ class CartScreen extends StatelessWidget {
                     width: 10,
                   ),
                   Chip(
-                    label: Text('\$${cart.totalAmount}'),
+                    label: Text('\$${cart.totalAmount.toStringAsFixed(2)}'),
                   ),
                   FlatButton(
                     child: Text(
@@ -42,7 +45,11 @@ class CartScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false)
+                          .addOrder(cartItemValues, cart.totalAmount);
+                      cart.clear();
+                    },
                   ),
                 ]),
           ),
@@ -53,10 +60,11 @@ class CartScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (ctx, i) => CartItemWidget(
-              id: cartItem[i].id,
-              price: cartItem[i].price,
-              quantity: cartItem[i].quantity,
-              title: cartItem[i].title,
+              productId: cart.items.keys.toList()[i],
+              id: cartItemValues[i].id,
+              price: cartItemValues[i].price,
+              quantity: cartItemValues[i].quantity,
+              title: cartItemValues[i].title,
             ),
             itemCount: cart.itemCount,
           ),
