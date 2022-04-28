@@ -1,4 +1,5 @@
 import 'package:dushshop/screens/orders_screen.dart';
+import 'package:dushshop/screens/user_product_screen.dart';
 
 import './provider/cart.dart';
 import './provider/orders.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
+            errorColor: Colors.redAccent,
             fontFamily: 'Lato',
             textTheme: const TextTheme(
               bodyLarge: TextStyle(
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
+          UserProductScreen.routeName: (ctx) => UserProductScreen(),
         },
       ),
     );
