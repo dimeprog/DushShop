@@ -1,5 +1,6 @@
 import 'package:dushshop/screens/orders_screen.dart';
 import 'package:dushshop/screens/product_overview_screen.dart';
+import 'package:dushshop/screens/user_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/product_overview_screen.dart';
@@ -59,6 +60,25 @@ class AppDrawer extends StatelessWidget {
             }
           },
         ),
+        const Divider(
+            // thickness: 1,
+            ),
+        ListTile(
+          leading: const Icon(
+            Icons.edit,
+            color: Colors.pinkAccent,
+          ),
+          title: const Text(
+            'Manage product',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                fontSize: 18),
+          ),
+          onTap: () => Navigator.of(context)
+              .pushReplacementNamed(UserProductScreen.routeName),
+        ),
+        const Divider(),
       ]),
     );
   }
