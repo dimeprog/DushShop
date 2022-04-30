@@ -1,3 +1,4 @@
+import 'package:dushshop/screens/edit_product_screen.dart';
 import 'package:dushshop/widget/app_drawer.dart';
 
 import '../provider/product.dart';
@@ -16,7 +17,9 @@ class UserProductScreen extends StatelessWidget {
         title: Text('Your Product'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditProductScreen.routeName);
+            },
             icon: const Icon(Icons.add),
           ),
         ],
@@ -29,6 +32,7 @@ class UserProductScreen extends StatelessWidget {
               height: 300,
               child: ListView.builder(
                 itemBuilder: (ctx, i) => UserProductItem(
+                  id: productData[i].id,
                   imageUrl: productData[i].imageUrl,
                   title: productData[i].title,
                 ),
