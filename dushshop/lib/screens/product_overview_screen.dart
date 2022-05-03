@@ -22,6 +22,37 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showFavoriteOnly = false;
+  var initSetValue = true;
+  var isloading = false;
+
+  // @override
+  // void initState() {
+  //   // this works because i set listen to false
+  //   Provider.of<ProductProvider>(context, listen: false).fetchAndSetData();
+  //   // using future duration
+  //   // Future.delayed(Duration.zero).then((_) {
+  //   //   Provider.of<ProductProvider>(context).fetchAndSetData();
+  //   // });
+  //   super.initState();
+  // }
+
+  //  most used case
+  @override
+  void didChangeDependencies() {
+    if (initSetValue) {
+      setState(() {
+        isloading = true;
+      });
+      Provider.of<ProductProvider>(context).fetchAndSetData().then((_) {
+        setState(() {
+          isloading = false;
+        });
+      });
+    }
+    initSetValue = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ProductData = Provider.of<ProductProvider>(context).item;
@@ -82,7 +113,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductGrid(_showFavoriteOnly),
+      body: isloading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductGrid(_showFavoriteOnly),
     );
   }
 }
