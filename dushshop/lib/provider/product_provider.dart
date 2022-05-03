@@ -1,6 +1,8 @@
 import 'product.dart';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
   final List<Product> _item = [
@@ -82,17 +84,34 @@ class ProductProvider with ChangeNotifier {
     return _item.where((prod) => prod.isFavourite).toList();
   }
 
-  void addItem(Product product) {
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      description: product.description,
-      imageUrl: product.imageUrl,
-      price: product.price,
-      title: product.title,
-      // isFavourite: false,
-    );
-    _item.add(newProduct);
-    notifyListeners();
+  Future<void> addItem(Product product) {
+    // const url = 'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/';
+    var url = Uri.parse(
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json');
+    return http
+        .post(url,
+            body: jsonEncode({
+              'title': product.title,
+              'description': product.description,
+              'price': product.price,
+              'isFavourite': product.isFavourite,
+              'imageUrl': product.imageUrl,
+            }))
+        .then((response) {
+      // ignore: avoid_print
+      print(json.decode(response.body));
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        title: product.title,
+        // isFavourite: false,
+      );
+      print(newProduct.id);
+      _item.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void updateItem(String id, Product newProduct) {

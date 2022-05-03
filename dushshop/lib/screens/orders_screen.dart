@@ -15,7 +15,7 @@ class OrdersScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pushNamed('/'),
         ),
-        title: Text('Your Order'),
+        title: const Text('Your Order'),
       ),
       body: Column(
         children: [
