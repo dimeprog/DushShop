@@ -1,3 +1,5 @@
+import 'package:dushshop/models/http_exception.dart';
+
 import 'product.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -89,7 +91,7 @@ class ProductProvider with ChangeNotifier {
         'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json');
     try {
       final response = await http.get(url);
-      print(json.decode(response.body));
+      // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map;
       final List<Product> loadedProduct = [];
       extractedData.forEach((prodId, productData) {
@@ -130,7 +132,7 @@ class ProductProvider with ChangeNotifier {
         title: product.title,
         // isFavourite: false,
       );
-      print(newProduct.id);
+      // print(newProduct.id);
       _item.add(newProduct);
       notifyListeners();
     } catch (err) {
@@ -139,14 +141,37 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  void updateItem(String id, Product newProduct) {
+  Future<void> updateItem(String id, Product newProduct) async {
     final indexProd = _item.indexWhere((prod) => prod.id == id);
-    if (indexProd >= 0) _item[indexProd] = newProduct;
-    notifyListeners();
+    if (indexProd >= 0) {
+      var url = Uri.parse(
+          'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json');
+      await http.patch(url,
+          body: jsonEncode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'price': newProduct.price,
+            'imageUrl': newProduct.imageUrl,
+          }));
+
+      _item[indexProd] = newProduct;
+      notifyListeners();
+    }
   }
 
-  void deleteItem(String id) {
-    _item.removeWhere((prod) => prod.id == id);
+  Future<void> deleteItem(String id) async {
+    final existingIndex = _item.indexWhere((prod) => prod.id == id);
+    Product? existProduct = _item[existingIndex];
+    _item.removeAt(existingIndex);
     notifyListeners();
+    var url = Uri.parse(
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json');
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _item.insert(existingIndex, existProduct);
+      notifyListeners();
+      throw HttpException('could not delete product');
+    }
+    existProduct = null;
   }
 }
