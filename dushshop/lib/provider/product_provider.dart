@@ -94,6 +94,7 @@ class ProductProvider with ChangeNotifier {
       // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map;
       final List<Product> loadedProduct = [];
+      if (extractedData == null) return;
       extractedData.forEach((prodId, productData) {
         loadedProduct.add(Product(
           id: prodId,
@@ -107,7 +108,7 @@ class ProductProvider with ChangeNotifier {
       _item = loadedProduct;
       notifyListeners();
     } catch (err) {
-      throw err;
+      throw (err);
     }
   }
 

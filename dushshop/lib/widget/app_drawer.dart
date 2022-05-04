@@ -52,12 +52,7 @@ class AppDrawer extends StatelessWidget {
                 fontSize: 18),
           ),
           onTap: () {
-            if (orderdata.isNotEmpty) {
-              Navigator.of(context)
-                  .pushReplacementNamed(OrdersScreen.routeName);
-            } else {
-              Navigator.of(context).pushReplacementNamed('/');
-            }
+            Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
           },
         ),
         const Divider(

@@ -100,6 +100,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (editProduct.id != '') {
       await Provider.of<ProductProvider>(context, listen: false)
           .updateItem(editProduct.id, editProduct);
+      setState(() {
+        isLoading = false;
+      });
 
       Navigator.of(context).pop();
     } else {
