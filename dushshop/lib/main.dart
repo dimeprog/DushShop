@@ -42,7 +42,24 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.deepOrange,
             errorColor: Colors.redAccent,
             fontFamily: 'Lato',
+            accentTextTheme: const TextTheme(
+              titleMedium: TextStyle(
+                color: Colors.lightBlue,
+              ),
+              bodyLarge: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold),
+              bodyMedium: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             textTheme: const TextTheme(
+              titleMedium: TextStyle(
+                color: Colors.lightBlue,
+              ),
               bodyLarge: TextStyle(
                   color: Colors.black38,
                   fontSize: 26,
