@@ -1,11 +1,12 @@
-import 'package:dushshop/screens/edit_product_screen.dart';
-import 'package:dushshop/screens/orders_screen.dart';
-import 'package:dushshop/screens/user_product_screen.dart';
+import '../provider/auth.dart';
 
+import '../screens/auth_screen.dart';
+import '../screens/edit_product_screen.dart';
+import '../screens/orders_screen.dart';
+import '../screens/user_product_screen.dart';
 import './provider/cart.dart';
 import './provider/orders.dart';
 import './screens/cart_screen.dart';
-
 import './screens/product_overview_screen.dart';
 import 'package:flutter/material.dart';
 import './screens/product_detail_screen.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => ProductProvider(),
         ),
@@ -70,7 +74,7 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             )),
-        home: ProductOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
