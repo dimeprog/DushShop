@@ -23,13 +23,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // var token;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => ProductProvider(),
+        ChangeNotifierProxyProvider<Auth, ProductProvider>(
+          create: (context) => ProductProvider(),
+          update: (_, auth, previousProduct) =>
+              previousProduct!..updatedataNotifier(auth.token!),
+          // ProductProvider(
+          //   auth.token,
+          //   previousProduct == null ? [] : previousProduct.item,
+          // ),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
@@ -38,50 +45,52 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Orders(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
-            errorColor: Colors.redAccent,
-            fontFamily: 'Lato',
-            accentTextTheme: const TextTheme(
-              titleMedium: TextStyle(
-                color: Colors.lightBlue,
-              ),
-              bodyLarge: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold),
-              bodyMedium: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            textTheme: const TextTheme(
-              titleMedium: TextStyle(
-                color: Colors.lightBlue,
-              ),
-              bodyLarge: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold),
-              bodyMedium: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Consumer<Auth>(
+        builder: ((context, AuthData, _) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                  primarySwatch: Colors.purple,
+                  accentColor: Colors.deepOrange,
+                  errorColor: Colors.redAccent,
+                  fontFamily: 'Lato',
+                  accentTextTheme: const TextTheme(
+                    titleMedium: TextStyle(
+                      color: Colors.lightBlue,
+                    ),
+                    bodyLarge: TextStyle(
+                        color: Colors.black38,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold),
+                    bodyMedium: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  textTheme: const TextTheme(
+                    titleMedium: TextStyle(
+                      color: Colors.lightBlue,
+                    ),
+                    bodyLarge: TextStyle(
+                        color: Colors.black38,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold),
+                    bodyMedium: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+              home: AuthData.isAuth ? ProductOverviewScreen() : AuthScreen(),
+              routes: {
+                ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+                CartScreen.routeName: (ctx) => CartScreen(),
+                OrdersScreen.routeName: (ctx) => OrdersScreen(),
+                UserProductScreen.routeName: (ctx) => UserProductScreen(),
+                EditProductScreen.routeName: (ctx) => EditProductScreen(),
+              },
             )),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductScreen.routeName: (ctx) => UserProductScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
-        },
       ),
     );
   }

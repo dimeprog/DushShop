@@ -78,6 +78,18 @@ class ProductProvider with ChangeNotifier {
   Product findById(String id) {
     return item.firstWhere((prod) => prod.id == id);
   }
+//  constructor
+
+  String? token;
+
+  // ProductProvider(
+  //   this.token,
+  // );
+
+  // method 1
+  void updatedataNotifier(String _token) {
+    token = _token;
+  }
 
   // List<String> get idGetter {
   //   return item.map((e) => e.id).toList();
@@ -88,11 +100,12 @@ class ProductProvider with ChangeNotifier {
 
   Future<void> fetchAndSetData() async {
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json?auth=$token');
     try {
       final response = await http.get(url);
       // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map;
+      print(extractedData);
       final List<Product> loadedProduct = [];
       if (extractedData == null) return;
       extractedData.forEach((prodId, productData) {

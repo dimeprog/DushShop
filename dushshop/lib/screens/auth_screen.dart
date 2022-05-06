@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dushshop/models/http_exception.dart';
 import 'package:flutter/material.dart';
 import '../provider/auth.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +104,22 @@ class _AuthCardState extends State<AuthCard> {
     'email': '',
     'password': '',
   };
+
+  void _showDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: const Text('An error occured'),
+              content: Text(message),
+              actions: [
+                FlatButton(
+                  child: Text('okay'),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                ),
+              ],
+            ));
+  }
+
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
@@ -115,13 +132,35 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
-      await Provider.of<Auth>(context, listen: false)
-          .signUp(_authData['email'], _authData['password']);
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false)
+            .login(_authData['email'], _authData['password']);
+      } else {
+        // Sign user up
+        await Provider.of<Auth>(context, listen: false)
+            .signUp(_authData['email'], _authData['password']);
+      }
+    } on HttpException catch (err) {
+      var errMessage = 'Authentication failed';
+      if (err.toString().contains('EMAIL_EXISTS')) {
+        errMessage = 'The Email is already in use';
+      } else if (err.toString().contains('INVALID_EMAIL')) {
+        errMessage = 'This is not a valid email address';
+      } else if (err.toString().contains('WEAK_PASSWORD')) {
+        errMessage = 'This is password is too weak';
+      } else if (err.toString().contains('EMAIL_NOT_FOUND')) {
+        errMessage = 'This email is not found';
+      } else if (err.toString().contains('INVALID_PASSWORD')) {
+        errMessage = 'This password is not found';
+      }
+      _showDialog(errMessage);
+    } catch (err) {
+      var errorMessage = 'could not Authenticate you.Please try again Later';
+      _showDialog(errorMessage);
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -202,7 +241,7 @@ class _AuthCardState extends State<AuthCard> {
                   height: 20,
                 ),
                 if (_isLoading)
-                  CircularProgressIndicator()
+                  const CircularProgressIndicator()
                 else
                   RaisedButton(
                     child:
@@ -220,7 +259,8 @@ class _AuthCardState extends State<AuthCard> {
                   child: Text(
                       '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
                   onPressed: _switchAuthMode,
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),
