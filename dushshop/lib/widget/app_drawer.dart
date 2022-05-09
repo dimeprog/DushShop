@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/product_overview_screen.dart';
 import '../provider/orders.dart';
+import '../provider/auth.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final orderdata = Provider.of<Orders>(context).order;
+    // final orderdata = Provider.of<Orders>(context, listen: false).order;
     return Drawer(
       child: Column(children: [
         AppBar(
@@ -74,6 +76,22 @@ class AppDrawer extends StatelessWidget {
               .pushReplacementNamed(UserProductScreen.routeName),
         ),
         const Divider(),
+        ListTile(
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.pinkAccent,
+            ),
+            title: const Text(
+              'Logout',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                  fontSize: 18),
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+              Provider.of<Auth>(context, listen: false).logOut();
+            }),
       ]),
     );
   }

@@ -79,6 +79,24 @@ class ProductProvider with ChangeNotifier {
     return item.firstWhere((prod) => prod.id == id);
   }
 
+  String? token;
+  String? userId;
+  List? previousProduct;
+  void updatedataNotifier(String? _token, String? _userId) {
+    token = _token;
+    userId = _userId;
+    notifyListeners();
+  }
+
+//  constructor
+  // ProductProvider(
+  //   this.token,
+  //   this.userId,
+  //   this.previousProduct,
+  // );
+
+  // method 1
+
   // List<String> get idGetter {
   //   return item.map((e) => e.id).toList();
   // }
@@ -86,15 +104,26 @@ class ProductProvider with ChangeNotifier {
     return _item.where((prod) => prod.isFavourite).toList();
   }
 
-  Future<void> fetchAndSetData() async {
+  Future<void> fetchAndSetData([bool filter = false]) async {
+    String filterString =
+        filter ? 'orderBy="creatorId"&equalTo="${userId}"' : '';
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json?auth=$token&${filterString}');
     try {
       final response = await http.get(url);
       // print(json.decode(response.body));
-      final extractedData = json.decode(response.body) as Map;
-      final List<Product> loadedProduct = [];
+      final extractedData = json.decode(response.body) as Map?;
+      // print(extractedData);
       if (extractedData == null) return;
+      final List<Product> loadedProduct = [];
+      var urlFavourite = Uri.parse(
+          'https://dushshop-4eb1e-default-rtdb.firebaseio.com/Favourite/${userId}.json?auth=$token');
+      final favResponse = await http.get(
+        urlFavourite,
+      );
+      final favResponseData = json.decode(favResponse.body);
+      print(favResponseData);
+
       extractedData.forEach((prodId, productData) {
         loadedProduct.add(Product(
           id: prodId,
@@ -102,7 +131,9 @@ class ProductProvider with ChangeNotifier {
           title: productData['title'],
           imageUrl: productData['imageUrl'],
           price: productData['price'],
-          isFavourite: productData['isFavourite'],
+          isFavourite: favResponseData == null
+              ? false
+              : favResponseData[prodId] ?? false,
         ));
       });
       _item = loadedProduct;
@@ -115,15 +146,15 @@ class ProductProvider with ChangeNotifier {
   Future<void> addItem(Product product) async {
     // const url = 'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/';
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products.json?auth=$token');
     try {
       final response = await http.post(url,
           body: jsonEncode({
             'title': product.title,
             'description': product.description,
             'price': product.price,
-            'isFavourite': product.isFavourite,
             'imageUrl': product.imageUrl,
+            'creatorId': userId,
           }));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
@@ -137,7 +168,7 @@ class ProductProvider with ChangeNotifier {
       _item.add(newProduct);
       notifyListeners();
     } catch (err) {
-      print(err);
+      // print(err);
       throw err;
     }
   }
@@ -146,7 +177,7 @@ class ProductProvider with ChangeNotifier {
     final indexProd = _item.indexWhere((prod) => prod.id == id);
     if (indexProd >= 0) {
       var url = Uri.parse(
-          'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json');
+          'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
       await http.patch(url,
           body: jsonEncode({
             'title': newProduct.title,
@@ -166,7 +197,7 @@ class ProductProvider with ChangeNotifier {
     _item.removeAt(existingIndex);
     notifyListeners();
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json?auth=$token');
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
       _item.insert(existingIndex, existProduct);

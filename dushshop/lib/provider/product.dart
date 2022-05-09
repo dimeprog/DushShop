@@ -26,18 +26,18 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleIsFavorite() async {
+  Future<void> toggleIsFavorite(String? token, String? userId) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/products/$id.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/Favourite/${userId}/$id.json?auth=$token');
 
     try {
-      final response = await http.patch(url,
-          body: jsonEncode({
-            'isFavourite': isFavourite,
-          }));
+      final response = await http.put(url,
+          body: jsonEncode(
+            isFavourite,
+          ));
       if (response.statusCode >= 400) {
         // isFavourite = oldStatus;
         // notifyListeners();
