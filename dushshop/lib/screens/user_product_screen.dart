@@ -10,12 +10,13 @@ import 'package:provider/provider.dart';
 class UserProductScreen extends StatelessWidget {
   static const routeName = '/user_product_screen';
   Future<void> refreshData(BuildContext context) async {
-    await Provider.of<ProductProvider>(context).fetchAndSetData();
+    await Provider.of<ProductProvider>(context, listen: false)
+        .fetchAndSetData(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<ProductProvider>(context).item;
+    // final productData = Provider.of<ProductProvider>(context).item;
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Product'),
@@ -29,25 +30,36 @@ class UserProductScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => refreshData(context),
-        child: Column(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 300,
-                child: ListView.builder(
-                  itemBuilder: (ctx, i) => UserProductItem(
-                    id: productData[i].id,
-                    imageUrl: productData[i].imageUrl,
-                    title: productData[i].title,
+      body: FutureBuilder(
+        future: refreshData(context),
+        builder: (context, dataSnapshot) =>
+            dataSnapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => refreshData(context),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 300,
+                            child: Consumer<ProductProvider>(
+                              builder: (context, productData, _) =>
+                                  ListView.builder(
+                                itemBuilder: (ctx, i) => UserProductItem(
+                                  id: productData.item[i].id,
+                                  imageUrl: productData.item[i].imageUrl,
+                                  title: productData.item[i].title,
+                                ),
+                                itemCount: productData.item.length,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  itemCount: productData.length,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

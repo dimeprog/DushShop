@@ -36,6 +36,21 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   //   super.initState();
   // }
 
+  void _showDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: const Text('An error occured'),
+              content: Text(message),
+              actions: [
+                FlatButton(
+                  child: Text('okay'),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                ),
+              ],
+            ));
+  }
+
   //  most used case
   @override
   void didChangeDependencies() {
@@ -43,10 +58,10 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       setState(() {
         isloading = true;
       });
-      Provider.of<ProductProvider>(context).fetchAndSetData().then((_) {
-        setState(() {
-          isloading = false;
-        });
+      Provider.of<ProductProvider>(context, listen: false)
+          .fetchAndSetData()
+          .then((_) {
+        isloading = false;
       });
     }
     initSetValue = false;

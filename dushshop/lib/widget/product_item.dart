@@ -1,3 +1,5 @@
+import 'package:dushshop/provider/auth.dart';
+
 import '../provider/cart.dart';
 import 'package:dushshop/provider/product.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
     // print('rebuild');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -37,7 +40,7 @@ class ProductItem extends StatelessWidget {
             leading: Consumer<Product>(
               builder: ((context, value, child) => IconButton(
                     onPressed: () {
-                      product.toggleIsFavorite();
+                      product.toggleIsFavorite(auth.token, auth.userId);
                     },
                     icon: product.isFavourite
                         ? const Icon(

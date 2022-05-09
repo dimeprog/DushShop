@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Auth with ChangeNotifier {
-  String? _userId;
-  String? _token;
-  DateTime? _expiryDate;
+  var _userId;
+  var _token;
+  var _expiryDate;
 
 // getters
   bool get isAuth {
@@ -21,6 +21,10 @@ class Auth with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  String? get userId {
+    return _userId;
   }
 
 ///////////////////////////////////////////////////////
@@ -69,4 +73,17 @@ class Auth with ChangeNotifier {
   Future<void> login(String? email, String? password) async {
     return _authenticate(email, password, 'signInWithPassword');
   }
+
+  //  logout method
+  void logOut() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
+
+  //  automatic login
+  // void loginUserAuto(){
+  //   if
+  // }
 }

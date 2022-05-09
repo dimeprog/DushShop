@@ -20,6 +20,17 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _order = [];
+  String? token;
+  String? userId;
+
+  // token function setter
+
+  void updatedataNotifier(String? _token, String? _userId) {
+    token = _token;
+    userId = _userId;
+    notifyListeners();
+  }
+
 //  getters
   List<OrderItem> get order {
     return [..._order];
@@ -28,11 +39,12 @@ class Orders with ChangeNotifier {
   // functions
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/orders.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/orders/${userId}.json?auth=$token');
     final timeStamp = DateTime.now();
     try {
       final response = await http.post(url,
           body: jsonEncode({
+            'creatorId': userId,
             'amount': total,
             'dateTime': timeStamp.toIso8601String(),
             'products': cartProducts
@@ -60,9 +72,11 @@ class Orders with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetOrder() async {
+  Future<void> fetchAndSetOrder([bool filter = false]) async {
+    // String filterString =
+    //     filter ? 'orderBy="creatorId"&equalTo="${userId}"' : '';
     var url = Uri.parse(
-        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/orders.json');
+        'https://dushshop-4eb1e-default-rtdb.firebaseio.com/orders/${userId}.json?auth=$token');
     try {
       final response = await http.get(url);
       // print(json.decode(response.body));
