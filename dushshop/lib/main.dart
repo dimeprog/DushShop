@@ -1,3 +1,5 @@
+import './screens/splash_screen.dart';
+
 import '../provider/auth.dart';
 
 import '../screens/auth_screen.dart';
@@ -80,7 +82,16 @@ class MyApp extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   )),
-              home: AuthData.isAuth ? ProductOverviewScreen() : AuthScreen(),
+              home: AuthData.isAuth
+                  ? ProductOverviewScreen()
+                  : FutureBuilder(
+                      future: AuthData.tryAutoLogin(),
+                      builder: ((context, Datasnapshot) =>
+                          Datasnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? SplashScreen()
+                              : AuthScreen()),
+                    ),
               routes: {
                 ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
                 CartScreen.routeName: (ctx) => CartScreen(),
