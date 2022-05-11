@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import './screens/product_detail_screen.dart';
 import './provider/product_provider.dart';
 import 'package:provider/provider.dart';
+import './helper/custom_route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,6 +55,12 @@ class MyApp extends StatelessWidget {
                   accentColor: Colors.deepOrange,
                   errorColor: Colors.redAccent,
                   fontFamily: 'Lato',
+                  pageTransitionsTheme: PageTransitionsTheme(
+                    builders: {
+                      TargetPlatform.android: CustomPageTransitionBuilder(),
+                      TargetPlatform.iOS: CustomPageTransitionBuilder()
+                    },
+                  ),
                   accentTextTheme: const TextTheme(
                     titleMedium: TextStyle(
                       color: Colors.lightBlue,
