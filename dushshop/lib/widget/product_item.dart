@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dushshop/provider/auth.dart';
 
 import '../provider/cart.dart';
@@ -22,6 +24,7 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     final auth = Provider.of<Auth>(context, listen: false);
+    String imageLInk = 'assets/images/product-placeholder.png';
     // print('rebuild');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -31,9 +34,15 @@ class ProductItem extends StatelessWidget {
               .pushNamed(ProductDetailScreen.routeName, arguments: product.id);
         },
         child: GridTile(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: AssetImage(imageLInk),
+              image: NetworkImage(
+                product.imageUrl,
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black87,
